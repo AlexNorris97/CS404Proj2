@@ -14,16 +14,14 @@ int main() {
 
 	int emergencyVehicles[10][3];
 
-	inputFile.open("EMV.txt");		// open input file object
+	inputFile.open("EMV.txt");		// prime EMV table
 	if (!inputFile)
 	{
 		cout << endl << "Error opening input file." << endl << endl;
 		system("pause");
 		return -1;
 	}
-
 	int i = 0;
-
 	inputFile >> emergencyVehicles[i][0];
 	while (!inputFile.eof() && i < 10)
 	{
@@ -32,7 +30,25 @@ int main() {
 		inputFile >> emergencyVehicles[i][0];
 
 	}
+	inputFile.close();
+	
+	inputFile.open("request.txt");		// create request table
+	if (!inputFile)
+	{
+		cout << endl << "Error opening input file." << endl << endl;
+		system("pause");
+		return -2;
+	}
+	int i = 0;
+	inputFile >> emergencyVehicles[i][0];
+	while (!inputFile.eof() && i < 10)
+	{
+		inputFile >> emergencyVehicles[i][1] >> emergencyVehicles[i][2];	// read rest of record fields
+		i++;
+		inputFile >> emergencyVehicles[i][0];
 
+	}
+	inputFile.close();
 
 	cout << endl << endl;
 	system("pause");
