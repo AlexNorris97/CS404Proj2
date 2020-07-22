@@ -31,7 +31,7 @@ int main() {
 	}
 	int i = 0;
 	inputFile >> emergencyVehicles[i][0];
-	while (!inputFile.eof() && i < 10)
+	while (!inputFile.eof() || i < 10)
 	{
 		inputFile >> emergencyVehicles[i][1] >> emergencyVehicles[i][2];	// read rest of record fields
 		i++;
@@ -52,7 +52,7 @@ int main() {
 	}
 	i = 0;
 	inputFile >> request[i][0];
-	while (!inputFile.eof() && i < 7)
+	while (!inputFile.eof() || i < 7)
 	{
 		inputFile >> request[i][1] >> request[i][2];	// read rest of record fields
 		i++;
@@ -71,7 +71,7 @@ int main() {
 	}
 	i = 0;
 	inputFile >> distance[i][0];
-	while (!inputFile.eof() && i < 6)
+	while (!inputFile.eof() || i < 6)
 	{
 		inputFile >> distance[i][1] >> distance[i][2];	// read rest of record fields
 		i++;
@@ -85,7 +85,7 @@ int main() {
 		int save = -1;
 		for (int j = 0; j < 10; j++) {
 			if (emergencyVehicles[j][3] == 1 && emergencyVehicles[j][1] == request[i][1]) {
-				int dist = distanceCalc(distance, emergencyVehicles[j][2], request[i][2]); // calculate distance
+				int dist = distanceCalc(distance, emergencyVehicles[j][2], request[i][2]); // find distance
 				if (dist == 0) { // if best case, select EMV and break inner loop
 					request[i][3] = emergencyVehicles[j][0];
 					request[i][4] = 0;
@@ -103,7 +103,6 @@ int main() {
 		emergencyVehicles[save][3] = 0;
 
 	}
-
 
 	outputRequestResult(request);
 
