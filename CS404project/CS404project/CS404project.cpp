@@ -7,14 +7,19 @@
 
 using namespace std;
 
+int distanceCalc(int dist[][3], int x, int y);
+
 int main() {
 
 	ifstream	inputFile;	// define input file stream object
 
 
-	int emergencyVehicles[10][3];
+	int emergencyVehicles[10][4];
+	int request[7][5];
+	int distance[6][3];
+	int min;
 
-	inputFile.open("EMV.txt");		// prime EMV table
+	inputFile.open("EMV.txt");		// create EMV table
 	if (!inputFile)
 	{
 		cout << endl << "Error opening input file." << endl << endl;
@@ -31,6 +36,9 @@ int main() {
 
 	}
 	inputFile.close();
+	for (i = 0; i < 10; i++) { // set all EMV to available
+		emergencyVehicles[i][3] = 1;
+	}
 	
 	inputFile.open("request.txt");		// create request table
 	if (!inputFile)
@@ -39,18 +47,80 @@ int main() {
 		system("pause");
 		return -2;
 	}
-	int i = 0;
-	inputFile >> emergencyVehicles[i][0];
-	while (!inputFile.eof() && i < 10)
+	i = 0;
+	inputFile >> request[i][0];
+	while (!inputFile.eof() && i < 7)
 	{
-		inputFile >> emergencyVehicles[i][1] >> emergencyVehicles[i][2];	// read rest of record fields
+		inputFile >> request[i][1] >> request[i][2];	// read rest of record fields
 		i++;
-		inputFile >> emergencyVehicles[i][0];
+		inputFile >> request[i][0];
+
+	}
+	inputFile.close();
+	
+
+	inputFile.open("distance.txt");		// create distance table
+	if (!inputFile)
+	{
+		cout << endl << "Error opening input file." << endl << endl;
+		system("pause");
+		return -3;
+	}
+	i = 0;
+	inputFile >> distance[i][0];
+	while (!inputFile.eof() && i < 6)
+	{
+		inputFile >> distance[i][1] >> distance[i][2];	// read rest of record fields
+		i++;
+		inputFile >> distance[i][0];
 
 	}
 	inputFile.close();
 
+	for (i = 0; i < 7; i++) {
+		min = INFINITY;
+		int save = -1;
+		for (int j = 0; j < 10; j++) {
+			if (emergencyVehicles[j][3] == 1) {
+				int dist = distanceCalc(distance, emergencyVehicles[j][2], request[i][2]); // calculate distance
+				if (dist == 0) { // if best case, select EMV and break inner loop
+					request[i][3] = emergencyVehicles[j][0];
+					request[i][4] = 0;
+					emergencyVehicles[j][3] = 0;
+					break;
+				} else if (dist < min){
+					min = dist;
+					save = j; // hold place in case of no better match
+					
+				}
+			}
+		}
+		if (!request[i][3]) {
+			request[i][3] = emergencyVehicles[save][0];
+			request[i][4] = 0;
+			emergencyVehicles[save][3] = 0;
+		}
+
+	}
+
 	cout << endl << endl;
 	system("pause");
 	return 0;
+}
+
+int distanceCalc(int dist[][3], int x, int y) {
+	
+	if (x == y) {
+		return 0;
+	}
+	
+	else {
+		int length = sizeof(dist) / sizeof(dist[0]);
+		for (int i = 0; i < length; i++) {
+			if ((x == dist[i][0] || x == dist[i][1]) && (y == dist[i][0] || y == dist[i][1])) {
+				return dist[i][2];
+			}
+		}
+	}
+	return -1;
 }
