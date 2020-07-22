@@ -84,7 +84,7 @@ int main() {
 		min = 100;
 		int save = -1;
 		for (int j = 0; j < 10; j++) {
-			if (emergencyVehicles[j][3] == 1) {
+			if (emergencyVehicles[j][3] == 1 && emergencyVehicles[j][1] == request[i][1]) {
 				int dist = distanceCalc(distance, emergencyVehicles[j][2], request[i][2]); // calculate distance
 				if (dist == 0) { // if best case, select EMV and break inner loop
 					request[i][3] = emergencyVehicles[j][0];
@@ -103,6 +103,7 @@ int main() {
 		emergencyVehicles[save][3] = 0;
 
 	}
+
 
 	outputRequestResult(request);
 
